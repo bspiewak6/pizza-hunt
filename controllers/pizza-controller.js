@@ -3,13 +3,19 @@ const { db } = require('../models/Pizza');
 
 const pizzaController = {
     // get all pizzas, callback function for GET /api/pizzas 
-    getAllPizzas(req, res) {
+    getAllPizza(req, res) {
         Pizza.find({})
-            .then(dbPizzaData => res.json(dbPizzaData))
-            .catch(err => {
-                console.log(err);
-                res.status(400).json(err);
-            });
+        .populate({
+            path: 'comments',
+            select: '-__v'
+        })
+        .select('-__v') // remove _v field 
+        .sort({ _id: -1 }) // sort in descending order
+        .then(dbPizzaData => res.json(dbPizzaData))
+        .catch(err => {
+            console.log(err);
+            res.status(400).json(err);
+        });
     },
 
     // get one pizza by id, callback function for GET /api/pizzas/1
@@ -17,7 +23,12 @@ const pizzaController = {
     // because that's the only data we need for this request to be fulfilled
     getPizzaById({ params }, res) {
         Pizza.findOne({ _id: params.id })
-            .then(dbPizzaData => {
+        .populate({
+        path: 'comments',
+        select: '-__v'
+        })
+        .select('-__v')
+        .then(dbPizzaData => {
                 // if no pizza is found, send 404
                 if (!dbPizzaData) {
                     res.status(404).json({ message: 'No pizza found with this id!' });

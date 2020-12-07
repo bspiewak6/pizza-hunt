@@ -3,7 +3,7 @@ const router = require('express').Router();
 // Instead of importing the entire object and having to do pizzaController.getAllPizza(), 
 // destructure the method names out of the imported object and use those names directly
 const {
-    getAllPizzas,
+    getAllPizza,
     getPizzaById,
     createPizza,
     updatePizza,
@@ -13,7 +13,7 @@ const {
 // Set up GET all and POST at /api/pizzas
 router
   .route('/')
-  .get(getAllPizzas)
+  .get(getAllPizza)
   .post(createPizza);
 
 // Set up GET one, PUT, and DELETE at /api/pizzas/:id -- combined together unlike sequelize
